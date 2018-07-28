@@ -23,51 +23,49 @@ def menu():
     if user_input=='5':
         sys.exit()
     else:
-        print('Invalid input. Please try again.')
+        print('\nInvalid input. Please try again.')
         menu()
 
 def create():
-    id_input=input('What is the numerical id of the flashcard you would like to input:\n')
+    id_input=input('\nWhat is the numerical id of the flashcard you would like to input:\n')
     try:
         id_input=int(id_input)
     except:
-        print('Invalid id input')
+        print('\nInvalid id input')
     else:
         if id_input in ID_LIST:
-            print('Invalid id input: ID already bound to a flaschard')
+            print('\nInvalid id input: ID already bound to a flaschard')
         if id_input < 1:
-            print('Invalid id input: ID cannot be negative')
+            print('\nInvalid id input: ID cannot be negative')
         else:
             ID_LIST.append(id_input)
-            question_input=input('What is the question of the flashcard you would like to input:\n')
-            answer_input=input('What is the answer of the flashcard you would like to input:\n')
+            question_input=input('\nWhat is the question of the flashcard you would like to input:\n')
+            answer_input=input('\nWhat is the answer of the flashcard you would like to input:\n')
             FLASHCARD_DICT[id_input]=(question_input,answer_input)
-            print('Flashcard has been successfully created')
+            print('\nFlashcard has been successfully created')
     menu()
 
 def delete():
     if len(ID_LIST)==0:
-        print('No flashcards to be deleted')
-    delete_input=input('What is the ID of the flashcard that you would like to delete?:\n')
+        print('\nNo flashcards to be deleted')
+    delete_input=input('\nWhat is the ID of the flashcard that you would like to delete?:\n')
     try:
         delete_input=int(delete_input)
     except:
-        print('Invalid flashcard ID number')
+        print('\nInvalid flashcard ID number')
         menu()
     if delete_input in ID_LIST:
         ID_LIST.remove(delete_input)
         del FLASHCARD_DICT[delete_input]
-        print('Your flashcard has been deleted!')
+        print('\nYour flashcard has been deleted!')
     else:
-        print('Invalid flashcard ID number')
+        print('\nInvalid flashcard ID number')
     menu()
 
 def view():
     ID_LIST.sort()
-    print(ID_LIST)
     for id in ID_LIST:
-        print()
-        print(str(id)+'.')
+        print('\n'+str(id)+'.')
         print(FLASHCARD_DICT[id][0])
         print(FLASHCARD_DICT[id][1])
     menu()
@@ -77,20 +75,20 @@ def flash_test(id=None):
         flash_id=random.choice(ID_LIST)
     else:
         flash_id=id
-    user_answer=input(str(flash_id)+'. '+str(FLASHCARD_DICT[flash_id][0])+'\n')
+    user_answer=input('\n'+str(flash_id)+'. '+str(FLASHCARD_DICT[flash_id][0])+'\n')
     if user_answer==FLASHCARD_DICT[flash_id][1]:
-        print('Congratulations! You are correct!')
+        print('\nCongratulations! You are correct!')
         test()
     else:
-        print('Sorry, you are incorrect.')
-        user_input=('Input y to try again, input n to skip.')
+        print('\nSorry, you are incorrect.')
+        user_input=('Input y to try again. Input n to skip.')
         if user_input=='y':
             flash_test(flash_id)
                     
 
 def test():
     if len(ID_LIST)==0:
-        print('No flashcards to test')
+        print('\nNo flashcards to test')
         menu()
     else:
         user_input=input('\nInput n to go to next flashcard. Input e to exit testing\n')
@@ -99,7 +97,7 @@ def test():
         if user_input=='e':
             menu()
         else:
-            print('Invalid input. Please try again.')
+            print('\nInvalid input. Please try again.')
             test()
 
 if __name__ == '__main__':
