@@ -1,14 +1,16 @@
 ID_LIST=[]
 FLASHCARD_DICT=dict()
-from random import randrange
+import random
+import sys
 
-def user():
+def menu():
     print()
     print('MAIN MENU')
     print('1. Create a new flashcard')
     print('2. Delete a flashcard')
     print('3. View all flashcards')
     print('4. Test flashcards')
+    print('5. Exit')
     user_input=input()
     if user_input=='1':
         create()
@@ -18,9 +20,11 @@ def user():
         view()
     if user_input=='4':
         test()
+    if user_input=='5':
+        sys.exit()
     else:
         print('Invalid input. Please try again.')
-        user()
+        menu()
 
 def create():
     id_input=input('What is the numerical id of the flashcard you would like to input:\n')
@@ -39,7 +43,7 @@ def create():
             answer_input=input('What is the answer of the flashcard you would like to input:\n')
             FLASHCARD_DICT[id_input]=(question_input,answer_input)
             print('Flashcard has been successfully created')
-    user()
+    menu()
 
 def delete():
     if len(ID_LIST)==0:
@@ -48,14 +52,15 @@ def delete():
     try:
         delete_input=int(delete_input)
     except:
-        invalid('Invalid flashcard ID number')
+        print('Invalid flashcard ID number')
+        menu()
     if delete_input in ID_LIST:
         ID_LIST.remove(delete_input)
         del FLASHCARD_DICT[delete_input]
         print('Your flashcard has been deleted!')
     else:
         print('Invalid flashcard ID number')
-    user()
+    menu()
 
 def view():
     ID_LIST.sort()
@@ -65,12 +70,39 @@ def view():
         print(str(id)+'.')
         print(FLASHCARD_DICT[id][0])
         print(FLASHCARD_DICT[id][1])
-    user()
+    menu()
+
+def flash_test(id=None):
+    if id==None:
+        flash_id=random.choice(ID_LIST)
+    else:
+        flash_id=id
+    user_answer=input(str(flash_id)+'. '+str(FLASHCARD_DICT[flash_id][0])+'\n')
+    if user_answer==FLASHCARD_DICT[flash_id][1]:
+        print('Congratulations! You are correct!')
+        test()
+    else:
+        print('Sorry, you are incorrect.')
+        user_input=('Input y to try again, input n to skip.')
+        if user_input=='y':
+            flash_test(flash_id)
+                    
 
 def test():
-    pass
+    if len(ID_LIST)==0:
+        print('No flashcards to test')
+        menu()
+    else:
+        user_input=input('\nInput n to go to next flashcard. Input e to exit testing\n')
+        if user_input=='n':
+            flash_test()
+        if user_input=='e':
+            menu()
+        else:
+            print('Invalid input. Please try again.')
+            test()
 
 if __name__ == '__main__':
     print('Hello!')
     print('Welcome to Sungwon Son\'s Flashcard Maker!')
-    user()
+    menu()
