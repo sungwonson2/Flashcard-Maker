@@ -1,108 +1,123 @@
-ID_LIST=[]
-FLASHCARD_DICT=dict()
-import random
+#FLASHCARD MANAGER
+
+import sets
+import flashcards
+
+import os
 import sys
 
-def menu():
-    print()
-    print('MAIN MENU')
-    print('1. Create a new flashcard')
-    print('2. Delete a flashcard')
-    print('3. View all flashcards')
-    print('4. Test flashcards')
-    print('5. Exit')
-    user_input=input()
-    if user_input=='1':
-        create()
-    if user_input=='2':
-        delete()
-    if user_input=='3':
-        view()
-    if user_input=='4':
+randomness_var = False
+current_file = ""
+
+dest = os.path.dirname(os.path.realpath(__file__))
+
+def sets_menu():
+    "The menu for sets"
+    print("*****Manage Sets*****")
+    print("1. View Sets")
+    print("2. Import Set")
+    print("3. Create Set")
+    print("4. Exit to menu")
+    a = input()
+    if a == "1":
+        sets.viewsets()
+        sets_menu()
+    elif a == "2":
+        sets.importset()
+    elif a == "3":
+        sets.createset()
+        sets_menu()
+    elif a == "4":
+        main()
+    else:
+        print("\nIncorrect value inputted. Please try again. \n")
+        sets_menu()
+
+def flashcards_menu(file, flashcards_list):
+    "Menu for flashcards"
+    print("Flashcards Menu")
+    print("1. Add Flashcards")
+    print("2. Delete Flashcards")
+    print("3. Edit Flashcards")
+    print("4. View Flashcards")
+    print("5. Test")
+    if randomness_var == True:
+        print("6. Reset randomness")
+        print("7. Exit " + str(file))
+    else:
+        print("6. Exit " + str(file))
+    a = input()
+    if a == "1":
+        flashcards.createflash(file, flashcards_list)
+    elif a == "2":
+        flashcards.deleteflash(file, flashcards_list)
+    elif a == "3":
+        flashcards.editflash(file, flashcards_list)
+    elif a == "4":
+        for flash in flashcards_list:
+            print(flash)
+    elif a == "5":
         test()
-    if user_input=='5':
-        sys.exit()
-    else:
-        print('Invalid input. Please try again.')
-        menu()
-
-def create():
-    id_input=input('What is the numerical id of the flashcard you would like to input:\n')
-    try:
-        id_input=int(id_input)
-    except:
-        print('Invalid id input')
-    else:
-        if id_input in ID_LIST:
-            print('Invalid id input: ID already bound to a flaschard')
-        if id_input < 1:
-            print('Invalid id input: ID cannot be negative')
+    elif a == "6":
+        if randomness_var == True:
+            resetrandomness()
         else:
-            ID_LIST.append(id_input)
-            question_input=input('What is the question of the flashcard you would like to input:\n')
-            answer_input=input('What is the answer of the flashcard you would like to input:\n')
-            FLASHCARD_DICT[id_input]=(question_input,answer_input)
-            print('Flashcard has been successfully created')
-    menu()
-
-def delete():
-    if len(ID_LIST)==0:
-        print('No flashcards to be deleted')
-    delete_input=input('What is the ID of the flashcard that you would like to delete?:\n')
-    try:
-        delete_input=int(delete_input)
-    except:
-        print('Invalid flashcard ID number')
-        menu()
-    if delete_input in ID_LIST:
-        ID_LIST.remove(delete_input)
-        del FLASHCARD_DICT[delete_input]
-        print('Your flashcard has been deleted!')
-    else:
-        print('Invalid flashcard ID number')
-    menu()
-
-def view():
-    ID_LIST.sort()
-    print(ID_LIST)
-    for id in ID_LIST:
-        print()
-        print(str(id)+'.')
-        print(FLASHCARD_DICT[id][0])
-        print(FLASHCARD_DICT[id][1])
-    menu()
-
-def flash_test(id=None):
-    if id==None:
-        flash_id=random.choice(ID_LIST)
-    else:
-        flash_id=id
-    user_answer=input(str(flash_id)+'. '+str(FLASHCARD_DICT[flash_id][0])+'\n')
-    if user_answer==FLASHCARD_DICT[flash_id][1]:
-        print('Congratulations! You are correct!')
-        test()
-    else:
-        print('Sorry, you are incorrect.')
-        user_input=('Input y to try again, input n to skip.')
-        if user_input=='y':
-            flash_test(flash_id)
-                    
-
-def test():
-    if len(ID_LIST)==0:
-        print('No flashcards to test')
-        menu()
-    else:
-        user_input=input('\nInput n to go to next flashcard. Input e to exit testing\n')
-        if user_input=='n':
-            flash_test()
-        if user_input=='e':
-            menu()
+            main()
+    elif a == "7":
+        if randomness_var == True:
+            main()
         else:
-            print('Invalid input. Please try again.')
-            test()
+            print("\nIncorrect value inputted. Please try again.\n")
+            flashcards_menu()
+    else:
+        print("\nIncorrect value inputted. Please try again.\n")
+        flashcards_menu(file, flashcards_list)
+    flashcards_menu(file, flashcards_list)
+
+def options():
+    print("Options")
+    print("1. Randomness")
+    print("2. Exit to menu")
+    a = input()
+    if a == "1":
+        print("1. Randomness on")
+        print("2. Randomness off")
+        b = input()
+        if b == "1":
+            randomness_var = True
+        elif b == "2":
+            ranomdness_var = False
+        else:
+            print("\nIncorrect value inputted. Please try again.\n")
+            options()        
+    elif a == "2":
+        main()
+    else:
+        print("\nIncorrect value inputted. Please try again.\n")
+        options()
+
+def exit_program():
+    "Exits the program"
+    sys.exit
+
+def main():
+    print("Welcome to Flashcard Manager")
+    print("1. Manage Sets")
+    print("2. Manage Flashcards")
+    print("3. Options")
+    print("4. Exit")
+    a = input()
+    if a == "1":
+        sets_menu()
+    elif a == "2":
+        flashcards.pickset()
+    elif a == "3":
+        options()
+    elif a == "4":
+        exit_program()
+    else:
+        print("\nIncorrect value inputted. Please try again.\n")
+        main()
 
 if __name__ == '__main__':
-    print('Hello!')
-    print('Welcome to Sungwon Son\'s Flashcard Maker!')
-    menu()
+    main()
